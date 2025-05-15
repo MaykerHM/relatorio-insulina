@@ -1,0 +1,150 @@
+﻿* {
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  font-family: 'Lato', sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1a1a1a;
+  min-height: 10vh;
+  border-bottom: 1px solid #000;
+}
+
+h1 {
+  color: #fff;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  background-color: #eeeeee;
+}
+
+img {
+  background-color: #757575;
+  padding: 3px;
+  margin: 3px;
+  width: 300px;
+}
+
+h3 {
+  font-size: 20px;
+  margin: 15px 0px 15px 0px;
+}
+
+.form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 598px;
+  margin-bottom: 20px;
+}
+
+button {
+  width: 120px;
+  height: 35px;
+  border-radius: 4px;
+  margin-left: 8px;
+  background-color: #f9a825;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+button:hover {
+  background-color: #f57f17;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+}
+
+.card {
+  background-color: #d3d3d3;
+  padding: 0 20px;
+  border-radius: 8px;
+  box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.5);
+  transition: 0.5s;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card:hover {
+  box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.5);
+}
+
+#valoresExtraidos {
+  max-width: 80vw;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+}
+
+.centerTable {
+  margin: 0px auto;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 8px;
+}
+
+td:first-child {
+  text-align: left;
+}
+
+tr:last-child td:first-child {
+  text-align: center;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+@media (max-width: 900px) {
+  #imagens {
+    flex-direction: column;
+  }
+  input {
+    max-width: 65vw;
+  }
+  button {
+    max-width: 20vw;
+  }
+  textarea {
+    max-width: 90vw;
+  }
+  #arquivoHTML {
+    width: 118px;
+  }
+  .spaceBetween {
+    max-width: 85vw;
+  }
+  .row {
+    flex-direction: column;
+  }
+
+  .card {
+    margin: 20px 0px 20px 0px;
+    padding: 0px 10px;
+  }
+}
