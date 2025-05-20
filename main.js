@@ -74,16 +74,13 @@ const gerarRelatorio = (doc) => {
     .filter((e) => !e.match(re))
 	.filter((e) => {return !e.includes('Relatório')})
 	.filter((e) => {return !e.includes('SECRETARIA MUNICIPAL')})
-  let allArray = []
-  let i = Number.NEGATIVE_INFINITY
-  let partArray = []
-  let usersArray = []
 
   let ubsAtual
   let usuarioAtual = ""
   let usaNPH = false
   let usaRegular = false
   let dadosExtraidos = []
+  
   pTextList.map((e, index, array) => {
     if (index > 0) {
       let after = array[parseInt(index) + 1]
