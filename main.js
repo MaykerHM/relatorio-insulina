@@ -1,5 +1,72 @@
 ﻿let arquivoHTML = document.getElementById('arquivoHTML')
-let gerarRelatorio = (doc) => {
+
+function agruparPorUbsEUsuario(array) {
+  // Criamos um objeto para armazenar os itens agrupados
+  const agrupados = {};
+  
+  // Percorremos o array original
+  array.forEach(item => {
+    // Criamos uma chave única baseada na combinação de ubs e usuario
+    const chave = `${item.ubs}-${item.usuario}`;
+    
+    // Se essa chave já existe no objeto de agrupamento
+    if (agrupados[chave]) {
+      // Atualizamos os valores booleanos dando prioridade para true
+      agrupados[chave].usaNPH = agrupados[chave].usaNPH || item.usaNPH;
+      agrupados[chave].usaRegular = agrupados[chave].usaRegular || item.usaRegular;
+    } else {
+      // Se a chave não existe, criamos uma nova entrada
+      agrupados[chave] = { ...item };
+    }
+  });
+  
+  // Convertemos o objeto de volta para um array
+  return Object.values(agrupados);
+}
+
+function gerarTotalizadorPorUbs(arrayAgrupado) {
+  // Criamos um objeto para armazenar os totalizadores por UBS
+  const totalizadores = {};
+  
+  // Percorremos o array agrupado
+  arrayAgrupado.forEach(item => {
+    const ubs = item.ubs;
+    
+    // Se a UBS ainda não estiver no objeto totalizadores, inicializamos
+    if (!totalizadores[ubs]) {
+      totalizadores[ubs] = {
+        UBS: ubs,
+        total_pacientes: 0,
+        total_nph: 0,
+        total_regular: 0,
+        somente_nph: 0,
+        somente_regular: 0,
+        nph_e_regular: 0
+      };
+    }
+    
+    // Incrementamos o total de pacientes
+    totalizadores[ubs].total_pacientes++;
+    
+    // Contagem por tipo de insulina
+    if (item.usaNPH && item.usaRegular) {
+      totalizadores[ubs].nph_e_regular++;
+      totalizadores[ubs].total_nph++;
+      totalizadores[ubs].total_regular++;
+    } else if (item.usaNPH) {
+      totalizadores[ubs].somente_nph++;
+      totalizadores[ubs].total_nph++;
+    } else if (item.usaRegular) {
+      totalizadores[ubs].somente_regular++;
+      totalizadores[ubs].total_regular++;
+    }
+  });
+  
+  // Convertemos o objeto de totalizadores para um array
+  return Object.values(totalizadores);
+}
+
+const gerarRelatorio = (doc) => {
   let pNodeList = Array.from(doc.querySelectorAll('p'))
   const re = /\d{2}\/\d{2}\/\d{2}/g
   let pTextList = pNodeList
@@ -12,74 +79,52 @@ let gerarRelatorio = (doc) => {
   let partArray = []
   let usersArray = []
 
+  let ubsAtual
+  let usuarioAtual = ""
+  let usaNPH = false
+  let usaRegular = false
+  let dadosExtraidos = []
   pTextList.map((e, index, array) => {
     if (index > 0) {
-      let before = array[parseInt(index) - 1]
       let after = array[parseInt(index) + 1]
 
-      if (e.includes('UBS') || e.includes('UASF') || e.includes('POLICLINICA')){
-        i = index
-        let ubsArray = e
-        partArray.push(ubsArray)
+      if (e.includes('UBS') || e.includes('UASF') || e.includes('POLICLINICA')) {
+        if (usuarioAtual) {
+          dadosExtraidos.push({ubs: ubsAtual, usuario: usuarioAtual, usaNPH, usaRegular})
+          usuarioAtual = ""
+          usaNPH = false
+          usaRegular = false
+        }
+        ubsAtual = e
       }
 
-      if (e.includes('NPH 100') || e.includes('REGULAR 100') || e.includes(' ANOS')) {
-        usersArray.push(e)
+      if (e.includes('d. Usuario SU')) {
+        if (usuarioAtual) {
+          dadosExtraidos.push({ubs: ubsAtual, usuario: usuarioAtual, usaNPH, usaRegular})
+          usaNPH = false
+          usaRegular = false
+        }
+        usuarioAtual = array[parseInt(index) + 4]
       }
-      if (partArray.length > 0) {
-        if ((after && after.includes('Saude')) || array.length == index + 1) {
-          partArray.push(usersArray)
-          allArray.push(partArray)
-          partArray = []
-          usersArray = []
+
+      if (e === 'Descr. Produto') {
+        if (after === "1079708") {
+          usaNPH = true
+        }
+        if (after === "1079709") {
+          usaRegular = true
         }
       }
+      if (array.length - 1 === index) {
+        dadosExtraidos.push({ubs: ubsAtual, usuario: usuarioAtual, usaNPH, usaRegular})
+      }
     }
   })
 
-  let simplifiedArray = allArray.map((e) => {
-    let nph = 0
-    let regular = 0
-    e[1].map((e) => {
-      if (e.includes('NPH 100')) {
-        nph += 1
-      } else if (e.includes('REGULAR 100')) {
-        regular += 1
-      }
-    })
-    let pacientes = e[1].length - nph - regular 
-    let ubs = e[0]
-
-    return [ubs, pacientes, nph, regular]
-  })
-
-  let result = []
-
-  simplifiedArray.map((e, index, array) => {
-    let indexUBS = result.findIndex((x) => x.UBS === e[0])
-    if (indexUBS == -1) {
-      let object = {
-        UBS: e[0],
-        total_pacientes: e[1],
-        total_nph: e[2],
-        total_regular: e[3],
-      }
-      result.push(object)
-    } else {
-      result[indexUBS].total_pacientes += e[1]
-      result[indexUBS].total_nph += e[2]
-      result[indexUBS].total_regular += e[3]
-    }
-  })
-
-  result.map((e) => {
-e.somente_regular = e.total_pacientes - e.total_nph
-    e.somente_nph = e.total_pacientes - e.total_regular
-e.nph_e_regular = e.total_nph + e.total_regular - e.total_pacientes
-  })
-
-  return result
+  const dadosAgrupados = agruparPorUbsEUsuario(dadosExtraidos)
+  return gerarTotalizadorPorUbs(dadosAgrupados)
 }
+
 const table = document.getElementById('valoresExtraidos')
 const extrair = () => {
   let fr = new FileReader()
