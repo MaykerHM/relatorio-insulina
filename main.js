@@ -185,3 +185,31 @@ const extrair = () => {
 }
 
 document.getElementById('extrair').onclick = extrair
+
+// Script para os botões de impressão
+document.addEventListener('DOMContentLoaded', function() {
+  const printButton = document.getElementById('printButton');
+  const printReturnBtn = document.getElementById('printReturnBtn');
+  
+  // Botão de impressão
+  printButton.addEventListener('click', function() {
+    // Entrar no modo de impressão
+    document.body.classList.add('print-mode');
+    
+    // Aguardar a transição CSS e então chamar a impressão do navegador
+    setTimeout(function() {
+      window.print();
+    }, 500);
+  });
+  
+  // Botão para voltar do modo impressão
+  printReturnBtn.addEventListener('click', function() {
+    document.body.classList.remove('print-mode');
+  });
+  
+  // Quando a janela de impressão for fechada, voltar ao modo normal
+  window.addEventListener('afterprint', function() {
+    // Manter o modo impressão para visualização
+    // O usuário precisará clicar no botão "Voltar" para retornar
+  });
+});

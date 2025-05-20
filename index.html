@@ -7,22 +7,30 @@
 <title>Relatório de Insulina</title>
 </head>
 <body>
-<header>
-	<h1>Relatório de Insulina</h1>
-</header>
+<div id="content-wrapper">
+  <header class="hide-in-print">
+    <h1>Relatório de Insulina</h1>
+  </header>
+  
+  <button id="printButton" class="print-button">
+    <span class="print-icon">🖨️</span> Imprimir
+  </button>
+  
+  <button id="printReturnBtn" class="print-return-btn">Voltar</button>
 
-<main>
-		<div class="card">
-			<h3>Extraia os códigos do arquivo HTML</h3>
-			<div class="form">
-				<input id="arquivoHTML" type="file" name="input" placeholder="Selecione o arquivo HTML">
-				<div>
-					<button id="extrair">Extrair</button>	
-				</div>
-			</div>
-		</div>
-			<table id="valoresExtraidos" class="card centerTable"></table>
-</main>
+  <main>
+    <div class="card hide-in-print">
+      <h3>Extraia os códigos do arquivo HTML</h3>
+      <div class="form">
+        <input id="arquivoHTML" type="file" name="input" placeholder="Selecione o arquivo HTML">
+        <div>
+          <button id="extrair">Extrair</button>	
+        </div>
+      </div>
+    </div>
+    <table id="valoresExtraidos" class="card centerTable"></table>
+  </main>
+</div>
 
 <script src="main.js"></script>
 </body>

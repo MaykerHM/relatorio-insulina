@@ -1,4 +1,32 @@
-﻿* {
+﻿/* Regras específicas para impressão real */
+@media print {
+  .print-return-btn {
+    display: none !important; /* Garante que o botão Voltar não apareça na impressão */
+  }
+  
+  body {
+    background-color: white !important;
+  }
+  
+  #valoresExtraidos {
+    box-shadow: none !important;
+    background-color: white !important;
+  }
+  
+  /* Remover margens e padding desnecessários */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    background-color: white !important;
+  }
+  
+  .card {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: white !important;
+  }
+}* {
   text-decoration: none;
   padding: 0;
   margin: 0;
@@ -12,6 +40,7 @@ header {
   background-color: #1a1a1a;
   min-height: 10vh;
   border-bottom: 1px solid #000;
+  position: relative; /* Para posicionar o botão toggle */
 }
 
 h1 {
@@ -120,6 +149,79 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
+/* Estilos para o botão de impressão */
+.print-button {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #f9a825; /* Laranja */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  cursor: pointer;
+  z-index: 1000;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+.print-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.print-button:hover {
+  background-color: #f57f17; /* Laranja mais escuro no hover */
+}
+
+/* No modo impressão, esconde o botão de impressão */
+.print-mode .print-button {
+  display: none;
+}
+
+/* Botão para retornar do modo impressão */
+.print-return-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgba(249, 168, 37, 0.3); /* Laranja com transparência */
+  color: #333;
+  border: none;
+  border-radius: 50px;
+  padding: 8px 15px;
+  cursor: pointer;
+  z-index: 1000;
+  font-weight: bold;
+  display: none;
+  transition: background-color 0.3s, opacity 0.3s;
+}
+
+.print-return-btn:hover {
+  background-color: rgba(249, 168, 37, 0.8);
+}
+
+.print-mode .print-return-btn {
+  display: block;
+}
+
+/* Classe para o modo de impressão */
+.print-mode .hide-in-print {
+  display: none;
+}
+
+.print-mode #valoresExtraidos {
+  margin-top: 0;
+  box-shadow: none;
+}
+
+.print-mode main {
+  padding-top: 0;
+  min-height: 100vh;
+}
+
 @media (max-width: 900px) {
   #imagens {
     flex-direction: column;
@@ -146,5 +248,12 @@ tr:nth-child(even) {
   .card {
     margin: 20px 0px 20px 0px;
     padding: 0px 10px;
+  }
+  
+  .toggle-btn {
+    top: 10px;
+    right: 10px;
+    padding: 5px 8px;
+    font-size: 0.8rem;
   }
 }
